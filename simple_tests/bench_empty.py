@@ -1,0 +1,19 @@
+# -*- coding: utf-8 -*-
+
+import random
+import time
+import string
+import sys
+import os
+import MySQLdb
+import argparse
+
+sys.path.insert(0, os.getcwd())
+from sleepconfig import *
+import dbconfig
+
+parser = argparse.ArgumentParser(prog='HippieTurtle', description='Django ORM testing')
+parser.add_argument('-p', '--profile', help='profile', action="store_true", default=False, dest="profile")
+args = parser.parse_args()
+
+time.sleep(10)

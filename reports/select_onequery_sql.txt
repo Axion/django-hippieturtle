@@ -1,0 +1,26 @@
+msg:pre test sleep
+mem:4700
+mem:4700
+mem:4700
+mem:4700
+mem:4700
+mem:4700
+mem:4700
+mem:4700
+msg:testing
+mem:6604
+mem:16844
+mem:25988
+mem:44292
+time:0.929710865021
+msg:sleeping
+mem:53156
+mem:53156
+mem:53156
+mem:53156
+mem:53156
+mem:53156
+mem:53156
+mem:53156
+mem:53156
+msg:stop

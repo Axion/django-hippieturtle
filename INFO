@@ -1,0 +1,1 @@
+This is a collection of django "manage.py" commands and standalone scripts used to test Django's ORM perfomance and memory consumption versus raw SQL scripts
