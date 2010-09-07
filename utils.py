@@ -1,13 +1,14 @@
 import pycha.bar
 import cairo
 import commands
+from dbconfig import *
 
 def db_prep():
+    #return
+    if DATABASE_ENGINE == 'mysql':
+        status, output = commands.getstatusoutput('service mysql restart')
+        print output
     return
-    print "restarting db"
-    status, output = commands.getstatusoutput('service mysql restart')
-    print output
-
     print "warming db by performing 10 000 select requests"
     status, output = commands.getstatusoutput('python warmup.py')
     print output

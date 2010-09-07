@@ -11,9 +11,6 @@ ADMINS = ()
 MANAGERS = ADMINS
 
 
-DATABASE_ENGINE = 'postgresql_psycopg2'
-DATABASE_ENGINE = 'mysql'
-
 from dbconfig import *
 
 

@@ -9,6 +9,7 @@ from utils import *
 
 import operator
 
+from dbconfig import *
 
 DELTAY_INT = 0
 
@@ -19,6 +20,9 @@ testcases = {
     "select_one_field" : ("Select all fields from db rows, access one field", ['select_simple','select_defer','select_only', 'select_values'], ['select_all','select_onefield', 'select_onefield_pk']),
     "select_one_query" : ("Select all fields from db in one query, access one field", ['select_onequery','select_onequery_noiterator'], ['select_onequery']),
     "delete" : ("Select all fields from db in one query, access one field", ['delete',], ['delete',]),
+    "cache_bug" : ("Select all fields from db in one query, access one field", ['select_with_filter','select_with_filter2'], ['select_with_filter','select_with_filter2']),
+
+    "select_with_filter" : ("Select all fields from db in one query, access one field", ['select_with_filter','select_with_filter3','select_with_filter_Q'], ['select_with_filter','select_with_filter3']),
 }
 
 print "Select testcase to execute"
@@ -30,7 +34,7 @@ for k, v in testcases.items():
 
 #inp = raw_input()
 
-command = "select_one_query"
+command = "cache_bug"
 
 
 print "You selected %s" % (command)
@@ -50,19 +54,19 @@ if save_sql:
 
     for cmd in testcases[command][1]:
         print "saving SQL for ORM test"
-        status, output = commands.getstatusoutput('python ./manage.py bench_%s --get_sql > sql/%s.sql' % (cmd, cmd))
+        status, output = commands.getstatusoutput('python ./manage.py bench_%s --get_sql > sql/%s_%s.sql' % (cmd, DATABASE_ENGINE, cmd))
         print output
 
 if save_profile:
     for cmd in testcases[command][1]:
         print "generating debug profile for ORM test"
         print 'python ./manage.py bench_%s --profile' % cmd
-        status, output = commands.getstatusoutput('python ./manage.py bench_%s --profile' % cmd)
+        status, output = commands.getstatusoutput('python ./manage.py bench_%s_%s --profile' % (DATABASE_ENGINE, cmd))
         #print output
 
     for cmd in testcases[command][2]:
         print "generating debug profile for SQL test"
-        status, output = commands.getstatusoutput('python ./simple_tests/bench_%s.py --profile' % cmd)
+        status, output = commands.getstatusoutput('python ./simple_tests/bench_%s_%s.py --profile' % (DATABASE_ENGINE, cmd))
         #print output
 
 run_times = {}
@@ -72,7 +76,7 @@ mem_usage_relative = {}
 for cmd in testcases[command][1]:
     db_prep()
     print "checking speed and memory consuption of ORM test"
-    status, output = commands.getstatusoutput('(./runner.sh "%s" 0.2  > turtle_test_pipe &);(sleep 0.5);(cat < turtle_test_pipe > reports/%s_orm.txt)' % ("python ./manage.py bench_%s" % cmd,cmd))
+    status, output = commands.getstatusoutput('(./runner.sh "%s" 0.2  > turtle_test_pipe &);(sleep 0.5);(cat < turtle_test_pipe > reports/%s_%s_orm.txt)' % ("python ./manage.py bench_%s" % cmd, DATABASE_ENGINE, cmd))
     print output
 
     max_mem = 0
@@ -103,7 +107,7 @@ for cmd in testcases[command][2]:
     db_prep()
 
     print "checking speed and memory consuption of SQL test"
-    status, output = commands.getstatusoutput('(./runner.sh "%s" 0.2  > turtle_test_pipe &);(sleep 0.5);(cat < turtle_test_pipe > reports/%s_sql.txt)' % ("python ./simple_tests/bench_%s.py" % cmd, cmd))
+    status, output = commands.getstatusoutput('(./runner.sh "%s" 0.2  > turtle_test_pipe &);(sleep 0.5);(cat < turtle_test_pipe > reports/%s_%s_sql.txt)' % ("python ./simple_tests/bench_%s.py" % cmd, DATABASE_ENGINE, cmd))
     #print output
 
     max_mem = 0
@@ -137,17 +141,17 @@ for cmd in testcases[command][2]:
 points = [(name, val) for name, val in run_times.items()]
 sorted_points = sorted(points, key=lambda k: k[1])
 print points
-graph(sorted_points ,"charts/%s_time.png" % command, "time", command)
+graph(sorted_points ,"charts/%s_%s_time.png" % (DATABASE_ENGINE, command), "time", command)
 
 points = [(name, val) for name, val in mem_usage.items()]
 sorted_points = sorted(points, key=lambda k: k[1])
 print points
-graph(sorted_points,"charts/%s_mem.png" % command, "mem", command)
+graph(sorted_points,"charts/%s_%s_mem.png" % (DATABASE_ENGINE, command), "mem", command)
 
 points = [(name, val) for name, val in mem_usage_relative.items()]
 sorted_points = sorted(points, key=lambda k: k[1])
 print points
-graph(sorted_points,"charts/%s_mem_relative.png" % command, "mem", command)
+graph(sorted_points,"charts/%s_%s_mem_relative.png" % (DATABASE_ENGINE, command), "mem", command)
 
 dirList=os.listdir("./debugging_profiles/")
 for fname in dirList:
