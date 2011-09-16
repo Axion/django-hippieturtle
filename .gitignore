@@ -26,3 +26,9 @@ web_users
 /httpdocs/media/uploads/shares/
 /tracker_logs/
 /.idea
+
+
+turtle_test_pipe
+test_settings.py
+out.txt
+projectFilesBackup/

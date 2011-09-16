@@ -1,4 +1,6 @@
 #!/bin/bash
+
+export DJANGO_SETTINGS_MODULE="test_settings"
 $1 > turtle_test_pipe &
 PID=$!
 

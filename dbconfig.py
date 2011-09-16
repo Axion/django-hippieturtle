@@ -1,6 +1,7 @@
 DATABASE_USER_MYSQL = "user"
 DATABASE_PASS_MYSQL = "pass"
 DATABASE_NAME_MYSQL = "tester"
+DATABASE_ENGINE = "mysql"
 
 def cursor():
     global cursor, conn
